@@ -4,9 +4,9 @@
 //
 // ======================================================================
 // Used to access topology functions
-#include <zephyr/kernel.h>
-#include <zephyr/sys/printk.h>
 #include <FprimeZephyrReference/ReferenceDeployment/Top/ReferenceDeploymentTopology.hpp>
+#include <zephyr/sys/printk.h>
+#include <zephyr/kernel.h>
 
 const struct device* serial = DEVICE_DT_GET(DT_NODELABEL(cdc_acm_uart0));
 
