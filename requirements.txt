@@ -8,3 +8,4 @@ west
 -r lib/zephyr-workspace/zephyr/scripts/requirements-base.txt
 -r lib/zephyr-workspace/zephyr/scripts/requirements-build-test.txt
 -r lib/zephyr-workspace/zephyr/scripts/requirements-run-test.txt
+ruff
