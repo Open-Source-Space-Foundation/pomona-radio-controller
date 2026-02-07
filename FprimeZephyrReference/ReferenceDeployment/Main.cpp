@@ -8,7 +8,7 @@
 #include <zephyr/sys/printk.h>
 #include <zephyr/usb/usbd.h>
 
-USBD_DEVICE_DEFINE(cdc_acm_serial,
+USBD_DEVICE_DEFINE(cdc_acm_serial_two_port,
 		   DEVICE_DT_GET(DT_NODELABEL(zephyr_udc0)),
 		   CONFIG_LOCAL_USB_VID, CONFIG_LOCAL_USB_PID);
 
@@ -29,49 +29,55 @@ static int cdc_acm_serial_init_device(void)
 {
 	int err;
 
-	err = usbd_add_descriptor(&cdc_acm_serial, &cdc_acm_serial_lang);
+	err = usbd_add_descriptor(&cdc_acm_serial_two_port, &cdc_acm_serial_lang);
 	if (err) {
 		printk("Failed to initialize %s (%d)", "language descriptor", err);
 		return err;
 	}
 
-	err = usbd_add_descriptor(&cdc_acm_serial, &cdc_acm_serial_mfr);
+	err = usbd_add_descriptor(&cdc_acm_serial_two_port, &cdc_acm_serial_mfr);
 	if (err) {
 		printk("Failed to initialize %s (%d)", "manufacturer descriptor", err);
 		return err;
 	}
 
-	err = usbd_add_descriptor(&cdc_acm_serial, &cdc_acm_serial_product);
+	err = usbd_add_descriptor(&cdc_acm_serial_two_port, &cdc_acm_serial_product);
 	if (err) {
 		printk("Failed to initialize %s (%d)", "product descriptor", err);
 		return err;
 	}
 
-	err = usbd_add_configuration(&cdc_acm_serial, USBD_SPEED_FS, &cdc_acm_serial_fs_config);
+	err = usbd_add_configuration(&cdc_acm_serial_two_port, USBD_SPEED_FS, &cdc_acm_serial_fs_config);
 	if (err) {
 		printk("Failed to add configuration");
 		return err;
 	}
 
-	err = usbd_register_class(&cdc_acm_serial, "cdc_acm_0", USBD_SPEED_FS, 1);
+	err = usbd_register_class(&cdc_acm_serial_two_port, "cdc_acm_0", USBD_SPEED_FS, 1);
 	if (err) {
-		printk("Failed to register classes");
+		printk("Failed to register class 1");
 		return err;
 	}
 
-	err = usbd_device_set_code_triple(&cdc_acm_serial, USBD_SPEED_FS,
+	err = usbd_register_class(&cdc_acm_serial_two_port, "cdc_acm_1", USBD_SPEED_FS, 1);
+	if (err) {
+		printk("Failed to register class 2");
+		return err;
+	}
+
+	err = usbd_device_set_code_triple(&cdc_acm_serial_two_port, USBD_SPEED_FS,
 					   USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 	if (err) {
 		return err;
 	}
 
-	err = usbd_init(&cdc_acm_serial);
+	err = usbd_init(&cdc_acm_serial_two_port);
 	if (err) {
 		printk("Failed to initialize %s (%d)", "device support", err);
 		return err;
 	}
 
-    err = usbd_enable(&cdc_acm_serial);
+    err = usbd_enable(&cdc_acm_serial_two_port);
     if (err) {
         printk("Failed to enable %s (%d)", "device support", err);
         return err;
