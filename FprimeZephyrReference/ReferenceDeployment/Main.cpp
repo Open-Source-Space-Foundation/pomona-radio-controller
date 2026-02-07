@@ -25,27 +25,6 @@ USBD_CONFIGURATION_DEFINE(cdc_acm_serial_fs_config,
 			  CONFIG_LOCAL_USB_MAX_POWER, &fs_cfg_desc);
 
 
-static int register_cdc_acm_0(struct usbd_context *const uds_ctx)
-{
-	int err;
-
-	err = usbd_add_configuration(uds_ctx, USBD_SPEED_FS, &cdc_acm_serial_fs_config);
-	if (err) {
-		printk("Failed to add configuration");
-		return err;
-	}
-
-	err = usbd_register_class(&cdc_acm_serial, "cdc_acm_0", USBD_SPEED_FS, 1);
-	if (err) {
-		printk("Failed to register classes");
-		return err;
-	}
-
-	return usbd_device_set_code_triple(uds_ctx, USBD_SPEED_FS,
-					   USB_BCC_MISCELLANEOUS, 0x02, 0x01);
-}
-
-
 static int cdc_acm_serial_init_device(void)
 {
 	int err;
@@ -68,7 +47,20 @@ static int cdc_acm_serial_init_device(void)
 		return err;
 	}
 
-	err = register_cdc_acm_0(&cdc_acm_serial);
+	err = usbd_add_configuration(&cdc_acm_serial, USBD_SPEED_FS, &cdc_acm_serial_fs_config);
+	if (err) {
+		printk("Failed to add configuration");
+		return err;
+	}
+
+	err = usbd_register_class(&cdc_acm_serial, "cdc_acm_0", USBD_SPEED_FS, 1);
+	if (err) {
+		printk("Failed to register classes");
+		return err;
+	}
+
+	err = usbd_device_set_code_triple(&cdc_acm_serial, USBD_SPEED_FS,
+					   USB_BCC_MISCELLANEOUS, 0x02, 0x01);
 	if (err) {
 		return err;
 	}
