@@ -8,7 +8,8 @@
 #include <zephyr/sys/printk.h>
 #include <zephyr/kernel.h>
 
-const struct device* serial = DEVICE_DT_GET(DT_NODELABEL(cdc_acm_uart0));
+const struct device* controlSerial = DEVICE_DT_GET(DT_NODELABEL(cdc_acm_uart0));
+const struct device* dataSerial = DEVICE_DT_GET(DT_NODELABEL(cdc_acm_uart1));
 
 int main(int argc, char* argv[]) {
     // ** DO NOT REMOVE **//
@@ -20,8 +21,10 @@ int main(int argc, char* argv[]) {
     Os::init();
     // Object for communicating state to the topology
     ReferenceDeployment::TopologyState inputs;
-    inputs.controlUartDevice = serial;
+    inputs.controlUartDevice = controlSerial;
+    inputs.dataUartDevice = dataSerial;
     inputs.controlUartBaudRate = 115200;
+    inputs.dataUartBaudRate = 115200;
 
     // Setup, cycle, and teardown topology
     ReferenceDeployment::setupTopology(inputs);
