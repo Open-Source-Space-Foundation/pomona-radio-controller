@@ -16,7 +16,7 @@ module ReferenceDeployment {
   # ----------------------------------------------------------------------
     import CdhCore.Subtopology
     import ComCcsds.Subtopology
-    
+
   # ----------------------------------------------------------------------
   # Instances used in the topology
   # ----------------------------------------------------------------------
@@ -26,6 +26,7 @@ module ReferenceDeployment {
     instance rateGroupDriver
     instance timer
     instance controlComDriver
+    instance dataComDriver
 
   # ----------------------------------------------------------------------
   # Pattern graph specifiers
@@ -56,18 +57,18 @@ module ReferenceDeployment {
       # Router to Command Dispatcher
       ComCcsds.fprimeRouter.commandOut -> CdhCore.cmdDisp.seqCmdBuff
       CdhCore.cmdDisp.seqCmdStatus -> ComCcsds.fprimeRouter.cmdResponseIn
-      
+
     }
 
     connections Communications {
       # ComDriver buffer allocations
       controlComDriver.allocate      -> ComCcsds.commsBufferManager.bufferGetCallee
       controlComDriver.deallocate    -> ComCcsds.commsBufferManager.bufferSendIn
-      
+
       # ComDriver <-> ComStub (Uplink)
       controlComDriver.$recv                     -> ComCcsds.comStub.drvReceiveIn
       ComCcsds.comStub.drvReceiveReturnOut -> controlComDriver.recvReturnIn
-      
+
       # ComStub <-> ComDriver (Downlink)
       ComCcsds.comStub.drvSendOut      -> controlComDriver.$send
       controlComDriver.ready         -> ComCcsds.comStub.drvConnected

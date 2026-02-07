@@ -54,4 +54,6 @@ module ReferenceDeployment {
 
   instance controlComDriver: Zephyr.ZephyrUartDriver base id 0x10014000
 
+  instance dataComDriver: Zephyr.ZephyrUartDriver base id 0x10015000
+
 }
