@@ -4,3 +4,7 @@ file = west.yml
 
 [zephyr]
 base = ./lib/zephyr-workspace/zephyr
+
+[build]
+board = rpi_pico2/rp2350a/m33
+
