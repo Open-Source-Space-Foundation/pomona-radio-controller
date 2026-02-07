@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+# F prime GDS pytest plugin defaults to wrong deployment path so we need this:
+addopts = ["--deployment=build-artifacts/zephyr/fprime-zephyr-deployment/"]
+# Also set default test path
+testpaths = ["test"]
