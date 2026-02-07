@@ -72,7 +72,7 @@ void setupTopology(const TopologyState& state) {
     startTasks(state);
 
     // Uplink is configured for receive so a socket task is started
-    comDriver.configure(state.controlUartDevice, state.controlUartBaudRate);
+    controlComDriver.configure(state.controlUartDevice, state.controlUartBaudRate);
 }
 
 void startRateGroups() {

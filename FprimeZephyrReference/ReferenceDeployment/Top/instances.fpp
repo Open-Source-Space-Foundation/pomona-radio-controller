@@ -52,6 +52,6 @@ module ReferenceDeployment {
 
   instance timer: Zephyr.ZephyrRateDriver base id 0x10013000
 
-  instance comDriver: Zephyr.ZephyrUartDriver base id 0x10014000
+  instance controlComDriver: Zephyr.ZephyrUartDriver base id 0x10014000
 
 }

@@ -25,7 +25,7 @@ module ReferenceDeployment {
     instance rateGroup1Hz
     instance rateGroupDriver
     instance timer
-    instance comDriver
+    instance controlComDriver
 
   # ----------------------------------------------------------------------
   # Pattern graph specifiers
@@ -61,16 +61,16 @@ module ReferenceDeployment {
 
     connections Communications {
       # ComDriver buffer allocations
-      comDriver.allocate      -> ComCcsds.commsBufferManager.bufferGetCallee
-      comDriver.deallocate    -> ComCcsds.commsBufferManager.bufferSendIn
+      controlComDriver.allocate      -> ComCcsds.commsBufferManager.bufferGetCallee
+      controlComDriver.deallocate    -> ComCcsds.commsBufferManager.bufferSendIn
       
       # ComDriver <-> ComStub (Uplink)
-      comDriver.$recv                     -> ComCcsds.comStub.drvReceiveIn
-      ComCcsds.comStub.drvReceiveReturnOut -> comDriver.recvReturnIn
+      controlComDriver.$recv                     -> ComCcsds.comStub.drvReceiveIn
+      ComCcsds.comStub.drvReceiveReturnOut -> controlComDriver.recvReturnIn
       
       # ComStub <-> ComDriver (Downlink)
-      ComCcsds.comStub.drvSendOut      -> comDriver.$send
-      comDriver.ready         -> ComCcsds.comStub.drvConnected
+      ComCcsds.comStub.drvSendOut      -> controlComDriver.$send
+      controlComDriver.ready         -> ComCcsds.comStub.drvConnected
     }
 
     connections RateGroups {
@@ -79,7 +79,7 @@ module ReferenceDeployment {
 
       # High rate (10Hz) rate group
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup10Hz] -> rateGroup10Hz.CycleIn
-      rateGroup10Hz.RateGroupMemberOut[0] -> comDriver.schedIn
+      rateGroup10Hz.RateGroupMemberOut[0] -> controlComDriver.schedIn
 
       # Slow rate (1Hz) rate group
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1Hz] -> rateGroup1Hz.CycleIn
